@@ -1,8 +1,7 @@
 /*
  * Copyright 2016-2019 the original author or authors from the JHipster project.
  *
- * This file is part of the JHipster project, see https://www.jhipster.tech/
- * for more information.
+ * Modifications Copyright (c) 2020 Branden(r) Lda. Developed by Fernando Rodrigues.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
