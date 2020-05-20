@@ -17,8 +17,8 @@ class PrefixedSimpleKey(
     private val methodName: String,
     vararg elements: Any
 ) : Serializable {
-    private val params : Array<Any> = elements.copyOf() as Array<Any>
-    private var hashCode: Int = calculateHash()
+    private val params = elements.copyOf()
+    private var hashCode = calculateHash()
 
     override fun equals(other: Any?): Boolean {
         return this === other ||
@@ -34,5 +34,4 @@ class PrefixedSimpleKey(
 
     private fun calculateHash(): Int =
         HASH_NUMBER * (HASH_NUMBER * prefix.hashCode() + methodName.hashCode()) + params.contentDeepHashCode()
-
 }
