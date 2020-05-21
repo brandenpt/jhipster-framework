@@ -19,6 +19,7 @@
 package pt.branden.brandenportal.jhipsterframework.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.context.annotation.PropertySource
 import org.springframework.context.annotation.PropertySources
 import org.springframework.web.cors.CorsConfiguration
@@ -39,297 +40,335 @@ import org.springframework.web.cors.CorsConfiguration
     PropertySource(value = ["classpath:git.properties"], ignoreResourceNotFound = true),
     PropertySource(value = ["classpath:META-INF/build-info.properties"], ignoreResourceNotFound = true)
 )
-class JHipsterProperties {
+data class JHipsterProperties(
+    val async: Async = Async(),
 
-    val async = Async()
+    val http: Http = Http(),
 
-    val http = Http()
+    val cache: Cache = Cache(),
 
-    val cache = Cache()
+    val mail: Mail = Mail(),
 
-    val mail = Mail()
+    val security: Security = Security(),
 
-    val security = Security()
+    val swagger: Swagger = Swagger(),
 
-    val swagger = Swagger()
+    val metrics: Metrics = Metrics(),
 
-    val metrics = Metrics()
+    val logging: Logging = Logging(),
 
-    val logging = Logging()
+    val cors: CorsConfiguration = CorsConfiguration(),
 
-    val cors = CorsConfiguration()
+    val social: Social = Social(),
 
-    val social = Social()
+    val gateway: Gateway = Gateway(),
 
-    val gateway = Gateway()
+    val registry: Registry = Registry(),
 
-    val registry = Registry()
+    val clientApp: ClientApp = ClientApp(),
 
-    val clientApp = ClientApp()
+    val auditEvents: AuditEvents = AuditEvents()
+) {
 
-    val auditEvents = AuditEvents()
+    data class Async(
+        var corePoolSize: Int = JHipsterDefaults.Async.corePoolSize,
+        var maxPoolSize: Int = JHipsterDefaults.Async.maxPoolSize,
+        var queueCapacity: Int = JHipsterDefaults.Async.queueCapacity
+    )
 
-    class Async {
-        var corePoolSize =
-            JHipsterDefaults.Async.corePoolSize
-        var maxPoolSize =
-            JHipsterDefaults.Async.maxPoolSize
-        var queueCapacity =
-            JHipsterDefaults.Async.queueCapacity
+    data class Http(
+        val cache: Cache = Cache()
+    ) {
+        data class Cache(
+            var timeToLiveInDays: Int = JHipsterDefaults.Http.Cache.timeToLiveInDays
+        )
     }
 
-    class Http {
-        val cache = Cache()
+    data class Cache(
+        val hazelcast: Hazelcast = Hazelcast(),
 
-        class Cache {
-            var timeToLiveInDays =
-                JHipsterDefaults.Http.Cache.timeToLiveInDays
-        }
-    }
+        val caffeine: Caffeine = Caffeine(),
 
-    class Cache {
-        val hazelcast = Hazelcast()
-        val caffeine = Caffeine()
-        val ehcache = Ehcache()
-        val infinispan = Infinispan()
-        val memcached = Memcached()
-        val redis = Redis()
+        val ehcache: Ehcache = Ehcache(),
 
-        class Hazelcast {
-            var timeToLiveSeconds =
-                JHipsterDefaults.Cache.Hazelcast.timeToLiveSeconds
-            var backupCount =
-                JHipsterDefaults.Cache.Hazelcast.backupCount
-            val managementCenter = ManagementCenter()
+        val infinispan: Infinispan = Infinispan(),
 
-            class ManagementCenter {
-                var isEnabled =
-                    JHipsterDefaults.Cache.Hazelcast.ManagementCenter.enabled
-                var updateInterval =
-                    JHipsterDefaults.Cache.Hazelcast.ManagementCenter.updateInterval
-                var url =
+        val memcached: Memcached = Memcached(),
+
+        val redis: Redis = Redis()
+    ) {
+
+        data class Hazelcast(
+            var timeToLiveSeconds: Int = JHipsterDefaults.Cache.Hazelcast.timeToLiveSeconds,
+
+            var backupCount: Int = JHipsterDefaults.Cache.Hazelcast.backupCount,
+
+            val managementCenter: ManagementCenter = ManagementCenter()
+        ) {
+            data class ManagementCenter(
+                var isEnabled: Boolean =
+                    JHipsterDefaults.Cache.Hazelcast.ManagementCenter.enabled,
+                var updateInterval: Int =
+                    JHipsterDefaults.Cache.Hazelcast.ManagementCenter.updateInterval,
+                var url: String =
                     JHipsterDefaults.Cache.Hazelcast.ManagementCenter.url
-            }
+            )
         }
 
-        class Caffeine {
-            var timeToLiveSeconds =
-                JHipsterDefaults.Cache.Caffeine.timeToLiveSeconds
-            var maxEntries =
-                JHipsterDefaults.Cache.Caffeine.maxEntries
+        data class Caffeine(
+            var timeToLiveSeconds: Int = JHipsterDefaults.Cache.Caffeine.timeToLiveSeconds,
+
+            var maxEntries: Long = JHipsterDefaults.Cache.Caffeine.maxEntries
+        )
+
+        data class Ehcache(
+            var timeToLiveSeconds: Int = JHipsterDefaults.Cache.Ehcache.timeToLiveSeconds,
+
+            var maxEntries: Long = JHipsterDefaults.Cache.Ehcache.maxEntries
+        )
+
+        data class Infinispan(
+            var configFile: String = JHipsterDefaults.Cache.Infinispan.configFile,
+
+            var isStatsEnabled: Boolean = JHipsterDefaults.Cache.Infinispan.statsEnabled,
+
+            val local: Local = Local(),
+
+            val distributed: Distributed = Distributed(),
+
+            val replicated: Replicated = Replicated()
+        ) {
+            data class Local(
+                var timeToLiveSeconds: Long = JHipsterDefaults.Cache.Infinispan.Local.timeToLiveSeconds,
+
+                var maxEntries: Long = JHipsterDefaults.Cache.Infinispan.Local.maxEntries
+            )
+
+            data class Distributed(
+                var timeToLiveSeconds: Long = JHipsterDefaults.Cache.Infinispan.Distributed.timeToLiveSeconds,
+
+                var maxEntries: Long = JHipsterDefaults.Cache.Infinispan.Distributed.maxEntries,
+
+                var instanceCount: Int = JHipsterDefaults.Cache.Infinispan.Distributed.instanceCount
+            )
+
+            data class Replicated(
+                var timeToLiveSeconds: Long = JHipsterDefaults.Cache.Infinispan.Replicated.timeToLiveSeconds,
+
+                var maxEntries: Long = JHipsterDefaults.Cache.Infinispan.Replicated.maxEntries
+            )
         }
 
-        class Ehcache {
-            var timeToLiveSeconds =
-                JHipsterDefaults.Cache.Ehcache.timeToLiveSeconds
-            var maxEntries =
-                JHipsterDefaults.Cache.Ehcache.maxEntries
-        }
+        data class Memcached(
+            var isEnabled: Boolean = JHipsterDefaults.Cache.Memcached.enabled,
 
-        class Infinispan {
-            var configFile =
-                JHipsterDefaults.Cache.Infinispan.configFile
-            var isStatsEnabled =
-                JHipsterDefaults.Cache.Infinispan.statsEnabled
-            val local = Local()
-            val distributed = Distributed()
-            val replicated = Replicated()
-
-            class Local {
-                var timeToLiveSeconds =
-                    JHipsterDefaults.Cache.Infinispan.Local.timeToLiveSeconds
-                var maxEntries =
-                    JHipsterDefaults.Cache.Infinispan.Local.maxEntries
-            }
-
-            class Distributed {
-                var timeToLiveSeconds =
-                    JHipsterDefaults.Cache.Infinispan.Distributed.timeToLiveSeconds
-                var maxEntries =
-                    JHipsterDefaults.Cache.Infinispan.Distributed.maxEntries
-                var instanceCount =
-                    JHipsterDefaults.Cache.Infinispan.Distributed.instanceCount
-            }
-
-            class Replicated {
-                var timeToLiveSeconds =
-                    JHipsterDefaults.Cache.Infinispan.Replicated.timeToLiveSeconds
-                var maxEntries =
-                    JHipsterDefaults.Cache.Infinispan.Replicated.maxEntries
-            }
-        }
-
-        class Memcached {
-            var isEnabled =
-                JHipsterDefaults.Cache.Memcached.enabled
             /**
              * Comma or whitespace separated list of servers' addresses.
              */
-            var servers =
-                JHipsterDefaults.Cache.Memcached.servers
-            var expiration =
-                JHipsterDefaults.Cache.Memcached.expiration
-            var isUseBinaryProtocol =
-                JHipsterDefaults.Cache.Memcached.useBinaryProtocol
-        }
+            var servers: String = JHipsterDefaults.Cache.Memcached.servers,
 
-        class Redis {
-            var server =
-                JHipsterDefaults.Cache.Redis.server
-            var expiration =
-                JHipsterDefaults.Cache.Redis.expiration
-            var cluster =
-                JHipsterDefaults.Cache.Redis.cluster
-        }
+            var expiration: Int = JHipsterDefaults.Cache.Memcached.expiration,
+
+            var isUseBinaryProtocol: Boolean = JHipsterDefaults.Cache.Memcached.useBinaryProtocol
+        )
+
+        data class Redis(
+            var server: String = JHipsterDefaults.Cache.Redis.server,
+
+            var expiration: Int = JHipsterDefaults.Cache.Redis.expiration,
+
+            var cluster: Boolean = JHipsterDefaults.Cache.Redis.cluster
+        )
     }
 
-    class Mail {
-        var isEnabled =
-            JHipsterDefaults.Mail.enabled
-        var from = JHipsterDefaults.Mail.from
-        var baseUrl =
-            JHipsterDefaults.Mail.baseUrl
-    }
+    data class Mail(
+        var isEnabled: Boolean = JHipsterDefaults.Mail.enabled,
 
-    class Security {
-        val clientAuthorization = ClientAuthorization()
-        val authentication = Authentication()
-        val rememberMe = RememberMe()
-        val oauth2 = OAuth2()
+        var from: String = JHipsterDefaults.Mail.from,
 
-        class ClientAuthorization {
-            var accessTokenUri =
-                JHipsterDefaults.Security.ClientAuthorization.accessTokenUri
-            var tokenServiceId =
-                JHipsterDefaults.Security.ClientAuthorization.tokenServiceId
-            var clientId =
-                JHipsterDefaults.Security.ClientAuthorization.clientId
-            var clientSecret =
-                JHipsterDefaults.Security.ClientAuthorization.clientSecret
-        }
+        var baseUrl: String = JHipsterDefaults.Mail.baseUrl
+    )
 
-        class Authentication {
-            val jwt = Jwt()
+    data class Security(
+        val clientAuthorization: ClientAuthorization = ClientAuthorization(),
 
-            class Jwt {
-                var secret =
-                    JHipsterDefaults.Security.Authentication.Jwt.secret
-                var base64Secret =
-                    JHipsterDefaults.Security.Authentication.Jwt.base64Secret
-                var tokenValidityInSeconds =
-                    JHipsterDefaults.Security.Authentication.Jwt
-                        .tokenValidityInSeconds
-                var tokenValidityInSecondsForRememberMe =
-                    JHipsterDefaults.Security.Authentication.Jwt
+        val authentication: Authentication = Authentication(),
+
+        val rememberMe: RememberMe = RememberMe(),
+
+        val oauth2: OAuth2 = OAuth2()
+    ) {
+
+        data class ClientAuthorization(
+            var accessTokenUri: String? = JHipsterDefaults.Security.ClientAuthorization.accessTokenUri,
+
+            var tokenServiceId: String? = JHipsterDefaults.Security.ClientAuthorization.tokenServiceId,
+
+            var clientId: String? = JHipsterDefaults.Security.ClientAuthorization.clientId,
+
+            var clientSecret: String? = JHipsterDefaults.Security.ClientAuthorization.clientSecret
+        )
+
+        data class Authentication(
+            val jwt: Jwt = Jwt()
+        ) {
+
+            data class Jwt(
+                var secret: String? = JHipsterDefaults.Security.Authentication.Jwt.secret,
+
+                var base64Secret: String? = JHipsterDefaults.Security.Authentication.Jwt.base64Secret,
+
+                var tokenValidityInSeconds: Long = JHipsterDefaults.Security.Authentication.Jwt
+                        .tokenValidityInSeconds,
+
+                var tokenValidityInSecondsForRememberMe: Long = JHipsterDefaults.Security.Authentication.Jwt
                         .tokenValidityInSecondsForRememberMe
-            }
+            )
         }
 
-        class RememberMe {
-            var key =
-                JHipsterDefaults.Security.RememberMe.key
-        }
+        data class RememberMe(
+            var key: String? = JHipsterDefaults.Security.RememberMe.key
+        )
 
-        class OAuth2 {
-            private var _audience = mutableListOf<String>()
+        @Suppress("ConstructorParameterNaming")
+        data class OAuth2(
+            private var _audience: MutableList<String> = mutableListOf()
+        ) {
 
             var audience: List<String>
                 get() = _audience
-                set(value) = run { _audience.addAll(value) }
+                set(value) { _audience.addAll(value) }
         }
     }
 
-    class Swagger {
-        var title =
-            JHipsterDefaults.Swagger.title
-        var description =
-            JHipsterDefaults.Swagger.description
-        var version =
-            JHipsterDefaults.Swagger.version
-        var termsOfServiceUrl =
-            JHipsterDefaults.Swagger.termsOfServiceUrl
-        var contactName =
-            JHipsterDefaults.Swagger.contactName
-        var contactUrl =
-            JHipsterDefaults.Swagger.contactUrl
-        var contactEmail =
-            JHipsterDefaults.Swagger.contactEmail
-        var license =
-            JHipsterDefaults.Swagger.license
-        var licenseUrl =
-            JHipsterDefaults.Swagger.licenseUrl
-        var defaultIncludePattern =
-            JHipsterDefaults.Swagger.defaultIncludePattern
-        var host =
-            JHipsterDefaults.Swagger.host
-        var protocols =
-            JHipsterDefaults.Swagger.protocols
-        var isUseDefaultResponseMessages =
-            JHipsterDefaults.Swagger.useDefaultResponseMessages
-    }
+    data class Swagger(
+        var title: String = JHipsterDefaults.Swagger.title,
 
-    class Metrics {
-        val logs = Logs()
+        var description: String = JHipsterDefaults.Swagger.description,
 
-        class Logs {
-            var isEnabled =
-                JHipsterDefaults.Metrics.Logs.enabled
-            var reportFrequency =
-                JHipsterDefaults.Metrics.Logs.reportFrequency
+        var version: String = JHipsterDefaults.Swagger.version,
+
+        var termsOfServiceUrl: String? = JHipsterDefaults.Swagger.termsOfServiceUrl,
+
+        var contactName: String? = JHipsterDefaults.Swagger.contactName,
+
+        var contactUrl: String? = JHipsterDefaults.Swagger.contactUrl,
+
+        var contactEmail: String? = JHipsterDefaults.Swagger.contactEmail,
+
+        var license: String? = JHipsterDefaults.Swagger.license,
+
+        var licenseUrl: String? = JHipsterDefaults.Swagger.licenseUrl,
+
+        var defaultIncludePattern: String = JHipsterDefaults.Swagger.defaultIncludePattern,
+
+        var host: String? = JHipsterDefaults.Swagger.host,
+
+        var protocols: Array<String> = JHipsterDefaults.Swagger.protocols,
+
+        var isUseDefaultResponseMessages: Boolean = JHipsterDefaults.Swagger.useDefaultResponseMessages
+    ) {
+
+        @Suppress("ComplexMethod")
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as Swagger
+
+            if (title != other.title) return false
+            if (description != other.description) return false
+            if (version != other.version) return false
+            if (termsOfServiceUrl != other.termsOfServiceUrl) return false
+            if (contactName != other.contactName) return false
+            if (contactUrl != other.contactUrl) return false
+            if (contactEmail != other.contactEmail) return false
+            if (license != other.license) return false
+            if (licenseUrl != other.licenseUrl) return false
+            if (defaultIncludePattern != other.defaultIncludePattern) return false
+            if (host != other.host) return false
+            if (!protocols.contentEquals(other.protocols)) return false
+            if (isUseDefaultResponseMessages != other.isUseDefaultResponseMessages) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = title.hashCode()
+            result = 31 * result + description.hashCode()
+            result = 31 * result + version.hashCode()
+            result = 31 * result + (termsOfServiceUrl?.hashCode() ?: 0)
+            result = 31 * result + (contactName?.hashCode() ?: 0)
+            result = 31 * result + (contactUrl?.hashCode() ?: 0)
+            result = 31 * result + (contactEmail?.hashCode() ?: 0)
+            result = 31 * result + (license?.hashCode() ?: 0)
+            result = 31 * result + (licenseUrl?.hashCode() ?: 0)
+            result = 31 * result + defaultIncludePattern.hashCode()
+            result = 31 * result + (host?.hashCode() ?: 0)
+            result = 31 * result + protocols.contentHashCode()
+            result = 31 * result + isUseDefaultResponseMessages.hashCode()
+            return result
         }
     }
 
-    class Logging {
-        var isUseJsonFormat =
-            JHipsterDefaults.Logging.useJsonFormat
-        val logstash = Logstash()
+    data class Metrics(
+        val logs: Logs = Logs()
+    ) {
 
-        class Logstash {
-            var isEnabled =
-                JHipsterDefaults.Logging.Logstash.enabled
-            var host =
-                JHipsterDefaults.Logging.Logstash.host
-            var port =
-                JHipsterDefaults.Logging.Logstash.port
-            var queueSize =
-                JHipsterDefaults.Logging.Logstash.queueSize
-        }
+        data class Logs(
+            var isEnabled: Boolean = JHipsterDefaults.Metrics.Logs.enabled,
+
+            var reportFrequency: Long = JHipsterDefaults.Metrics.Logs.reportFrequency
+        )
     }
 
-    class Social {
-        var redirectAfterSignIn =
-            JHipsterDefaults.Social.redirectAfterSignIn
+    data class Logging(
+        var isUseJsonFormat: Boolean = JHipsterDefaults.Logging.useJsonFormat,
+
+        val logstash: Logstash = Logstash()
+    ) {
+
+
+        data class Logstash(
+            var isEnabled: Boolean = JHipsterDefaults.Logging.Logstash.enabled,
+
+            var host: String = JHipsterDefaults.Logging.Logstash.host,
+
+            var port: Int = JHipsterDefaults.Logging.Logstash.port,
+
+            var queueSize: Int = JHipsterDefaults.Logging.Logstash.queueSize
+        )
     }
 
-    class Gateway {
-        val rateLimiting = RateLimiting()
+    data class Social(
+        var redirectAfterSignIn: String = JHipsterDefaults.Social.redirectAfterSignIn
+    )
 
-        var authorizedMicroservicesEndpoints =
-            JHipsterDefaults.Gateway
-                .authorizedMicroservicesEndpoints
+    data class Gateway(
+        val rateLimiting: RateLimiting = RateLimiting(),
 
-        class RateLimiting {
-            var isEnabled =
-                JHipsterDefaults.Gateway.RateLimiting.enabled
-            var limit =
-                JHipsterDefaults.Gateway.RateLimiting.limit
-            var durationInSeconds =
-                JHipsterDefaults.Gateway.RateLimiting.durationInSeconds
-        }
+        var authorizedMicroservicesEndpoints: Map<String?, List<String?>?> =
+            JHipsterDefaults.Gateway.authorizedMicroservicesEndpoints
+    ) {
+
+        data class RateLimiting(
+            var isEnabled: Boolean = JHipsterDefaults.Gateway.RateLimiting.enabled,
+
+            var limit: Long = JHipsterDefaults.Gateway.RateLimiting.limit,
+
+            var durationInSeconds: Int = JHipsterDefaults.Gateway.RateLimiting.durationInSeconds
+        )
     }
 
-    class Registry {
-        var password =
-            JHipsterDefaults.Registry.password
-    }
+    data class Registry(
+        var password: String? = JHipsterDefaults.Registry.password
+    )
 
-    class ClientApp {
-        var name =
-            JHipsterDefaults.ClientApp.name
-    }
+    data class ClientApp(
+        var name: String = JHipsterDefaults.ClientApp.name
+    )
 
-    class AuditEvents {
-        var retentionPeriod =
-            JHipsterDefaults.AuditEvents.retentionPeriod
-    }
+    data class AuditEvents(
+        var retentionPeriod: Int = JHipsterDefaults.AuditEvents.retentionPeriod
+    )
 }

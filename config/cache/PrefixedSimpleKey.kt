@@ -21,9 +21,16 @@ class PrefixedSimpleKey(
     private var hashCode = calculateHash()
 
     override fun equals(other: Any?): Boolean {
-        return this === other ||
-            other is PrefixedSimpleKey && prefix == other.prefix && methodName == other.methodName &&
-            params.contentDeepEquals(other.params)
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as PrefixedSimpleKey
+
+        if (prefix != other.prefix) return false
+        if (methodName == other.methodName) return false
+        if (!params.contentDeepEquals(other.params)) return false
+
+        return true
     }
 
     override fun hashCode(): Int = hashCode
