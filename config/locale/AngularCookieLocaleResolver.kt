@@ -7,7 +7,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,14 +18,14 @@
 
 package pt.branden.brandenportal.jhipsterframework.config.locale
 
-import java.util.*
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 import org.springframework.context.i18n.LocaleContext
 import org.springframework.context.i18n.TimeZoneAwareLocaleContext
 import org.springframework.util.StringUtils
 import org.springframework.web.servlet.i18n.CookieLocaleResolver
 import org.springframework.web.util.WebUtils
+import java.util.*
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 class AngularCookieLocaleResolver : CookieLocaleResolver() {
 
