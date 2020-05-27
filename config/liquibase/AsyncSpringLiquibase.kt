@@ -7,7 +7,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,8 +18,6 @@
 
 package pt.branden.brandenportal.jhipsterframework.config.liquibase
 
-import java.sql.SQLException
-import java.util.concurrent.Executor
 import liquibase.exception.LiquibaseException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -30,6 +28,8 @@ import org.springframework.util.StopWatch
 import pt.branden.brandenportal.jhipsterframework.config.JHipsterConstants.SPRING_PROFILE_DEVELOPMENT
 import pt.branden.brandenportal.jhipsterframework.config.JHipsterConstants.SPRING_PROFILE_HEROKU
 import pt.branden.brandenportal.jhipsterframework.config.JHipsterConstants.SPRING_PROFILE_NO_LIQUIBASE
+import java.sql.SQLException
+import java.util.concurrent.Executor
 
 /**
  * Specific liquibase.integration.spring.SpringLiquibase that will update the database asynchronously and close

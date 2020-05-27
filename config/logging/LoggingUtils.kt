@@ -7,7 +7,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,28 +28,37 @@ import ch.qos.logback.core.ConsoleAppender
 import ch.qos.logback.core.filter.EvaluatorFilter
 import ch.qos.logback.core.spi.ContextAwareBase
 import ch.qos.logback.core.spi.FilterReply
-import java.net.InetSocketAddress
 import net.logstash.logback.appender.LogstashTcpSocketAppender
 import net.logstash.logback.composite.ContextJsonProvider
 import net.logstash.logback.composite.GlobalCustomFieldsJsonProvider
-import net.logstash.logback.composite.loggingevent.*
+import net.logstash.logback.composite.loggingevent.ArgumentsJsonProvider
+import net.logstash.logback.composite.loggingevent.LogLevelJsonProvider
+import net.logstash.logback.composite.loggingevent.LoggerNameJsonProvider
+import net.logstash.logback.composite.loggingevent.LoggingEventFormattedTimestampJsonProvider
+import net.logstash.logback.composite.loggingevent.LoggingEventJsonProviders
+import net.logstash.logback.composite.loggingevent.LoggingEventPatternJsonProvider
+import net.logstash.logback.composite.loggingevent.MdcJsonProvider
+import net.logstash.logback.composite.loggingevent.MessageJsonProvider
+import net.logstash.logback.composite.loggingevent.StackTraceJsonProvider
+import net.logstash.logback.composite.loggingevent.ThreadNameJsonProvider
 import net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder
 import net.logstash.logback.encoder.LogstashEncoder
 import net.logstash.logback.stacktrace.ShortenedThrowableConverter
 import org.slf4j.LoggerFactory
 import pt.branden.brandenportal.jhipsterframework.config.JHipsterProperties
+import java.net.InetSocketAddress
 
 /**
  * Utility methods to add appenders to a [LoggerContext].
  */
-@Suppress("TooManyFunctions")
+
+private const val SHORTENED_LOGGER_NAME_LENGTH = 20
+private const val CONSOLE_APPENDER_NAME = "CONSOLE"
+private const val LOGSTASH_APPENDER_NAME = "LOGSTASH"
+private const val ASYNC_LOGSTASH_APPENDER_NAME = "ASYNC_LOGSTASH"
+
 object LoggingUtils {
     private val log = LoggerFactory.getLogger(javaClass)
-
-    private const val SHORTENED_LOGGER_NAME_LENGTH = 20
-    private const val CONSOLE_APPENDER_NAME = "CONSOLE"
-    private const val LOGSTASH_APPENDER_NAME = "LOGSTASH"
-    private const val ASYNC_LOGSTASH_APPENDER_NAME = "ASYNC_LOGSTASH"
 
     /**
      * <p>addJsonConsoleAppender.</p>
@@ -142,67 +151,6 @@ object LoggingUtils {
         }
     }
 
-    private fun compositeJsonEncoder(
-        context: LoggerContext?,
-        customFields: String?
-    ): LoggingEventCompositeJsonEncoder {
-        return LoggingEventCompositeJsonEncoder().apply {
-            this.context = context
-            providers = jsonProviders(context, customFields)
-            start()
-        }
-    }
-
-    private fun jsonProviders(
-        context: LoggerContext?,
-        customFields: String?
-    ): LoggingEventJsonProviders {
-        return LoggingEventJsonProviders().apply {
-            addArguments(ArgumentsJsonProvider())
-            addContext(ContextJsonProvider())
-            addGlobalCustomFields(customFieldsJsonProvider(customFields))
-            addLogLevel(LogLevelJsonProvider())
-            addLoggerName(loggerNameJsonProvider())
-            addMdc(MdcJsonProvider())
-            addMessage(MessageJsonProvider())
-            addPattern(LoggingEventPatternJsonProvider())
-            addStackTrace(stackTraceJsonProvider())
-            addThreadName(ThreadNameJsonProvider())
-            addTimestamp(timestampJsonProvider())
-            setContext(context)
-        }
-    }
-
-    private fun customFieldsJsonProvider(customFields: String?): GlobalCustomFieldsJsonProvider<ILoggingEvent> {
-        return GlobalCustomFieldsJsonProvider<ILoggingEvent>().apply { this.customFields = customFields }
-    }
-
-    private fun loggerNameJsonProvider(): LoggerNameJsonProvider {
-        return LoggerNameJsonProvider().apply { shortenedLoggerNameLength = SHORTENED_LOGGER_NAME_LENGTH }
-    }
-
-    private fun stackTraceJsonProvider(): StackTraceJsonProvider {
-        return StackTraceJsonProvider().apply { throwableConverter = throwableConverter() }
-    }
-
-    private fun throwableConverter(): ShortenedThrowableConverter {
-        return ShortenedThrowableConverter().apply { isRootCauseFirst = true }
-    }
-
-    private fun timestampJsonProvider(): LoggingEventFormattedTimestampJsonProvider {
-        return LoggingEventFormattedTimestampJsonProvider().apply {
-            timeZone = "UTC"
-            fieldName = "timestamp"
-        }
-    }
-
-    private fun logstashEncoder(customFields: String?): LogstashEncoder {
-        return LogstashEncoder().apply {
-            throwableConverter = throwableConverter()
-            this.customFields = customFields
-        }
-    }
-
     /**
      * Logback configuration is achieved by configuration file and API.
      * When configuration file change is detected, the configuration is reset.
@@ -234,5 +182,66 @@ object LoggingUtils {
         override fun onLevelChange(logger: Logger?, level: Level?) {
             // Nothing to do.
         }
+    }
+}
+
+private fun compositeJsonEncoder(
+    context: LoggerContext?,
+    customFields: String?
+): LoggingEventCompositeJsonEncoder {
+    return LoggingEventCompositeJsonEncoder().apply {
+        this.context = context
+        providers = jsonProviders(context, customFields)
+        start()
+    }
+}
+
+private fun jsonProviders(
+    context: LoggerContext?,
+    customFields: String?
+): LoggingEventJsonProviders {
+    return LoggingEventJsonProviders().apply {
+        addArguments(ArgumentsJsonProvider())
+        addContext(ContextJsonProvider())
+        addGlobalCustomFields(customFieldsJsonProvider(customFields))
+        addLogLevel(LogLevelJsonProvider())
+        addLoggerName(loggerNameJsonProvider())
+        addMdc(MdcJsonProvider())
+        addMessage(MessageJsonProvider())
+        addPattern(LoggingEventPatternJsonProvider())
+        addStackTrace(stackTraceJsonProvider())
+        addThreadName(ThreadNameJsonProvider())
+        addTimestamp(timestampJsonProvider())
+        setContext(context)
+    }
+}
+
+private fun customFieldsJsonProvider(customFields: String?): GlobalCustomFieldsJsonProvider<ILoggingEvent> {
+    return GlobalCustomFieldsJsonProvider<ILoggingEvent>().apply { this.customFields = customFields }
+}
+
+private fun loggerNameJsonProvider(): LoggerNameJsonProvider {
+    return LoggerNameJsonProvider().apply { shortenedLoggerNameLength = SHORTENED_LOGGER_NAME_LENGTH }
+}
+
+private fun stackTraceJsonProvider(): StackTraceJsonProvider {
+    return StackTraceJsonProvider().apply { throwableConverter = throwableConverter() }
+}
+
+private fun throwableConverter(): ShortenedThrowableConverter {
+    return ShortenedThrowableConverter().apply { isRootCauseFirst = true }
+}
+
+private fun timestampJsonProvider(): LoggingEventFormattedTimestampJsonProvider {
+    return LoggingEventFormattedTimestampJsonProvider().apply {
+        timeZone = "UTC"
+        fieldName = "timestamp"
+    }
+}
+
+private fun logstashEncoder(customFields: String?): LogstashEncoder {
+    return LogstashEncoder().apply {
+        throwableConverter = throwableConverter()
+        this.customFields = customFields
     }
 }

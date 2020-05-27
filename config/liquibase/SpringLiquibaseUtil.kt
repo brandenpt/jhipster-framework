@@ -7,7 +7,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,15 +18,15 @@
 
 package pt.branden.brandenportal.jhipsterframework.config.liquibase
 
-import java.util.concurrent.Executor
-import java.util.function.Supplier
-import javax.sql.DataSource
 import liquibase.integration.spring.SpringLiquibase
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties
 import org.springframework.boot.autoconfigure.liquibase.DataSourceClosingSpringLiquibase
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.core.env.Environment
+import java.util.concurrent.Executor
+import java.util.function.Supplier
+import javax.sql.DataSource
 
 @Suppress("MaxLineLength")
 /**

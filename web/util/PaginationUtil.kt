@@ -7,7 +7,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,10 +18,10 @@
 
 package pt.branden.brandenportal.jhipsterframework.web.util
 
-import java.text.MessageFormat
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpHeaders
 import org.springframework.web.util.UriComponentsBuilder
+import java.text.MessageFormat
 
 /**
  * Utility class for handling pagination.
@@ -29,7 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder
  *
  *
  * Pagination uses the same principles as the [GitHub API](https://developer.github.com/v3/#pagination),
- * and follow [RFC 5988 (Link header)](http://tools.ietf.org/html/rfc5988).
+ * and follow [RFC 5988 (Link header)](https://tools.ietf.org/html/rfc5988).
  */
 object PaginationUtil {
     private const val HEADER_X_TOTAL_COUNT = "X-Total-Count"
