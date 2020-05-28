@@ -45,7 +45,7 @@ import net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder
 import net.logstash.logback.encoder.LogstashEncoder
 import net.logstash.logback.stacktrace.ShortenedThrowableConverter
 import org.slf4j.LoggerFactory
-import pt.branden.brandenportal.jhipsterframework.config.JHipsterProperties
+import io.github.jhipster.config.JHipsterProperties
 import java.net.InetSocketAddress
 
 /**

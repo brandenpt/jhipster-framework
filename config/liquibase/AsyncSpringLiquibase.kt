@@ -25,9 +25,9 @@ import org.springframework.boot.autoconfigure.liquibase.DataSourceClosingSpringL
 import org.springframework.core.env.Environment
 import org.springframework.core.env.Profiles
 import org.springframework.util.StopWatch
-import pt.branden.brandenportal.jhipsterframework.config.JHipsterConstants.SPRING_PROFILE_DEVELOPMENT
-import pt.branden.brandenportal.jhipsterframework.config.JHipsterConstants.SPRING_PROFILE_HEROKU
-import pt.branden.brandenportal.jhipsterframework.config.JHipsterConstants.SPRING_PROFILE_NO_LIQUIBASE
+import io.github.jhipster.config.JHipsterConstants.SPRING_PROFILE_DEVELOPMENT
+import io.github.jhipster.config.JHipsterConstants.SPRING_PROFILE_HEROKU
+import io.github.jhipster.config.JHipsterConstants.SPRING_PROFILE_NO_LIQUIBASE
 import java.sql.SQLException
 import java.util.concurrent.Executor
 
